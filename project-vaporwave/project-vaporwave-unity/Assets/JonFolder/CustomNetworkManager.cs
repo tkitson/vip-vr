@@ -5,7 +5,13 @@ using UnityEngine.Networking;
 
 public class CustomNetworkManager : NetworkManager {
 
-	Color[] playerColors = new Color[] {Color.red, Color.blue};
+	Color[] playerColors = new Color[] {
+		Color.red, 
+		Color.blue,
+		Color.green,
+		Color.yellow,
+		Color.magenta,
+		Color.black};
 
 	//[SyncVar]
 	private short playerCount = 0;
