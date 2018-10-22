@@ -12,6 +12,13 @@ public class Player : NetworkBehaviour
         rend.material.color = color;
     }
 
+    public Color getColor(){
+        //find the renderer for this Player
+        Renderer rend = GetComponent<MeshRenderer>();
+        //and return its colour
+        return rend.material.color;
+    }
+
     public override void OnStartLocalPlayer()
     {
         

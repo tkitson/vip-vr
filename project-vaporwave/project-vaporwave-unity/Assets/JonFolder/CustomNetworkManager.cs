@@ -5,16 +5,18 @@ using UnityEngine.Networking;
 
 public class CustomNetworkManager : NetworkManager {
 
-	Color[] playerColors = new Color[] {
-		Color.red, 
-		Color.blue,
-		Color.green,
-		Color.yellow,
-		Color.magenta,
-		Color.black};
+	Stack<Color> playerColors = new Stack<Color>();
 
 	//[SyncVar]
 	private short playerCount = 0;
+
+	private void initStack(){
+		playerColors.Push(Color.black);
+		playerColors.Push(Color.green);
+		playerColors.Push(Color.red);
+		playerColors.Push(Color.blue);
+		playerColors.Push(Color.magenta);
+	}
 
 	public override void OnServerAddPlayer(
 		NetworkConnection conn, 
@@ -22,12 +24,32 @@ public class CustomNetworkManager : NetworkManager {
 	){
 		//print(playerControllerId);
 
+		//push a new round of colours to the stack if it's empty
+		if (playerColors.Count == 0){
+			initStack();
+		}
+
 		//create a player object and give it the next available playerColor
 		GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        player.GetComponent<Player>().setColor(playerColors[playerCount]);
+        player.GetComponent<Player>().setColor(playerColors.Pop());
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
 
 		//keep count of how many players we have
-		playerCount++;
+		//playerCount++;
+	}
+
+	public override void OnServerRemovePlayer(
+		NetworkConnection conn,
+		PlayerController playerController
+	){
+		GameObject player = playerController.gameObject;
+        Color color = player.GetComponent<Player>().getColor();
+        //NetworkServer.RemovePlayerForConnection(conn, player, playerControllerId);
+
+		//get rid of the player's game object; they are DEAD to us
+		Destroy(player, 0.0f);
+
+		//make the old color available again
+		playerColors.Push(color);
 	}
 }
