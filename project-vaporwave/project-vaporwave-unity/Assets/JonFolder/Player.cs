@@ -3,19 +3,13 @@ using UnityEngine.Networking;
 
 public class Player : NetworkBehaviour
 {
-    [SyncVar]
-    public Color color;
-
     public void setColor(Color color) {
-        this.color = color;
-
         //find the renderer for this Player
-        Renderer rend = GetComponent<Renderer>();
+        Renderer rend = GetComponent<MeshRenderer>();
 
-        //find the shader for this Player, and adjust its color
+        //find the material for this Player, and adjust its color
         //to match the given color
-        rend.material.shader = Shader.Find("_Color");
-        rend.material.SetColor("_Color", Color.red);
+        rend.material.color = color;
     }
 
     public override void OnStartLocalPlayer()
