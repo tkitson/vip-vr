@@ -3,7 +3,27 @@ using UnityEngine.Networking;
 
 public class Player : NetworkBehaviour
 {
+    [SyncVar] private GameObject objID;
+    private NetworkIdentity objNetID;
+
     public void setColor(Color color) {
+        CmdSetColor(color);
+    }
+
+    [Command]
+    public void CmdSetColor(Color color) {
+        //find the renderer for this Player
+        //Renderer rend = GetComponent<MeshRenderer>();
+
+        //find the material for this Player, and adjust its color
+        //to match the given color
+        //rend.material.color = color;
+
+        RpcSetColor(color);
+    }
+
+    [ClientRpc]
+    public void RpcSetColor(Color color) {
         //find the renderer for this Player
         Renderer rend = GetComponent<MeshRenderer>();
 

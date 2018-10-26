@@ -31,8 +31,11 @@ public class CustomNetworkManager : NetworkManager {
 
 		//create a player object and give it the next available playerColor
 		GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
-        player.GetComponent<Player>().setColor(playerColors.Pop());
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
+		
+		Color color= playerColors.Pop();
+		Debug.Log(color);
+		player.GetComponent<Player>().RpcSetColor(color);
 
 		//keep count of how many players we have
 		//playerCount++;
