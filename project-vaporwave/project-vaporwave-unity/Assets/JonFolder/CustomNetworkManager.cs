@@ -9,6 +9,7 @@ public class CustomNetworkManager : NetworkManager {
 
 	//[SyncVar]
 	private short playerCount = 0;
+	private bool prefabRegistred = false; 
 
 	private void initStack(){
 		playerColors.Push(Color.black);
@@ -24,6 +25,10 @@ public class CustomNetworkManager : NetworkManager {
 	){
 		//print(playerControllerId);
 
+		if (!prefabRegistred){
+			ClientScene.RegisterPrefab(playerPrefab);
+			prefabRegistred = true;
+		}
 		//push a new round of colours to the stack if it's empty
 		if (playerColors.Count == 0){
 			initStack();
@@ -32,7 +37,8 @@ public class CustomNetworkManager : NetworkManager {
 		//create a player object and give it the next available playerColor
 		GameObject player = (GameObject)Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
-		
+		//NetworkServer.Spawn(player);
+
 		Color color= playerColors.Pop();
 		Debug.Log(color);
 		player.GetComponent<Player>().RpcSetColor(color);
